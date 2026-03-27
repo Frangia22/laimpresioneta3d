@@ -5,11 +5,18 @@ const swaggerUi = require('swagger-ui-express');
 const { buildOpenApiDocument } = require('../openapi/build-open-api-document');
 const { validateRequest } = require('../middlewares/validate-request');
 const { asyncHandler } = require('../middlewares/async-handler');
-const { requireSessionAuth, requireAdmin } = require('../middlewares/api-auth');
+const { requireApiAuthentication, requireAdmin } = require('../middlewares/api-auth');
 
+const jwtTokenService = require('../../../infrastructure/auth/jwt-token-service');
+const { SequelizeUserRepository } = require('../../../infrastructure/persistence/sequelize/sequelize-user-repository');
 const { SequelizeProductRepository } = require('../../../infrastructure/persistence/sequelize/sequelize-product-repository');
 const { SequelizeServiceRepository } = require('../../../infrastructure/persistence/sequelize/sequelize-service-repository');
 const { SequelizeCategoryRepository } = require('../../../infrastructure/persistence/sequelize/sequelize-category-repository');
+
+const { loginApi } = require('../../../application/use-cases/auth/login-api.use-case');
+const { refreshTokens } = require('../../../application/use-cases/auth/refresh-tokens.use-case');
+const { getCurrentUser } = require('../../../application/use-cases/users/get-current-user.use-case');
+const { listUsers } = require('../../../application/use-cases/users/list-users.use-case');
 
 const { listProducts } = require('../../../application/use-cases/products/list-products.use-case');
 const { getProductById } = require('../../../application/use-cases/products/get-product.use-case');
@@ -42,10 +49,12 @@ const {
   idParamSchema: categoryIdParam,
   categoryCreateBodySchema,
 } = require('../schemas/category.schemas');
+const { loginBodySchema, refreshBodySchema } = require('../schemas/auth.schemas');
 
 const productRepository = new SequelizeProductRepository();
 const serviceRepository = new SequelizeServiceRepository();
 const categoryRepository = new SequelizeCategoryRepository();
+const userRepository = new SequelizeUserRepository();
 
 const router = express.Router();
 
@@ -56,18 +65,88 @@ router.use(
   swaggerUi.setup(openApiDocument, { customSiteTitle: 'Laimpresioneta API v1' })
 );
 
-router.get(
-  '/openapi.json',
-  (req, res) => {
-    res.json(openApiDocument);
-  }
+router.get('/openapi.json', (req, res) => {
+  res.json(openApiDocument);
+});
+
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok', version: 'v1' });
+});
+
+router.post(
+  '/auth/login',
+  validateRequest({ body: loginBodySchema }),
+  asyncHandler(async (req, res) => {
+    try {
+      const tokens = await loginApi({
+        userRepository,
+        jwtTokenService,
+        email: req.body.email,
+        password: req.body.password,
+      });
+      res.json(tokens);
+    } catch (e) {
+      if (e && e.message && /JWT_(ACCESS|REFRESH)_SECRET/.test(String(e.message))) {
+        return res.status(500).json({
+          code: 'SERVER_CONFIG',
+          message: 'Configuración JWT incompleta (JWT_ACCESS_SECRET / JWT_REFRESH_SECRET).',
+        });
+      }
+      throw e;
+    }
+  })
+);
+
+router.post(
+  '/auth/refresh',
+  validateRequest({ body: refreshBodySchema }),
+  asyncHandler(async (req, res) => {
+    try {
+      const tokens = await refreshTokens({
+        refreshToken: req.body.refreshToken,
+        jwtTokenService,
+        userRepository,
+      });
+      res.json(tokens);
+    } catch (e) {
+      if (e && e.message && /JWT_(ACCESS|REFRESH)_SECRET/.test(String(e.message))) {
+        return res.status(500).json({
+          code: 'SERVER_CONFIG',
+          message: 'Configuración JWT incompleta (JWT_ACCESS_SECRET / JWT_REFRESH_SECRET).',
+        });
+      }
+      throw e;
+    }
+  })
+);
+
+router.post(
+  '/auth/logout',
+  asyncHandler(async (req, res) => {
+    res.status(204).send();
+  })
 );
 
 router.get(
-  '/health',
-  (req, res) => {
-    res.json({ status: 'ok', version: 'v1' });
-  }
+  '/users/me',
+  requireApiAuthentication,
+  asyncHandler(async (req, res) => {
+    const user = await getCurrentUser({
+      userRepository,
+      userId: req.actor.id,
+    });
+    res.json(user);
+  })
+);
+
+router.get(
+  '/users',
+  requireApiAuthentication,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const users = await listUsers({ userRepository });
+    res.json(users);
+  })
 );
 
 router.get(
@@ -89,7 +168,7 @@ router.get(
 
 router.post(
   '/products',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ body: productCreateBodySchema }),
   asyncHandler(async (req, res) => {
@@ -100,7 +179,7 @@ router.post(
 
 router.put(
   '/products/:id',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ params: idParamSchema, body: productUpdateBodySchema }),
   asyncHandler(async (req, res) => {
@@ -115,7 +194,7 @@ router.put(
 
 router.delete(
   '/products/:id',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ params: idParamSchema }),
   asyncHandler(async (req, res) => {
@@ -143,7 +222,7 @@ router.get(
 
 router.post(
   '/services',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ body: serviceCreateBodySchema }),
   asyncHandler(async (req, res) => {
@@ -154,7 +233,7 @@ router.post(
 
 router.put(
   '/services/:id',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ params: serviceIdParam, body: serviceUpdateBodySchema }),
   asyncHandler(async (req, res) => {
@@ -169,7 +248,7 @@ router.put(
 
 router.delete(
   '/services/:id',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ params: serviceIdParam }),
   asyncHandler(async (req, res) => {
@@ -197,7 +276,7 @@ router.get(
 
 router.post(
   '/categories',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ body: categoryCreateBodySchema }),
   asyncHandler(async (req, res) => {
@@ -208,7 +287,7 @@ router.post(
 
 router.delete(
   '/categories/:id',
-  requireSessionAuth,
+  requireApiAuthentication,
   requireAdmin,
   validateRequest({ params: categoryIdParam }),
   asyncHandler(async (req, res) => {

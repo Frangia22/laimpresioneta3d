@@ -24,7 +24,7 @@ function validateRequest(schemas) {
         return res.status(400).json({
           code: 'VALIDATION_ERROR',
           message: 'Validación fallida',
-          details: err.errors,
+          details: err.issues ?? err.errors ?? [],
         });
       }
       next(err);
