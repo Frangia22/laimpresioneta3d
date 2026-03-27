@@ -29,9 +29,24 @@ JWT_REFRESH_EXPIRES_IN=7d
 
 Sin estas claves, `login` y `refresh` responderán error de configuración del servidor.
 
-### Compatibilidad legado (EJS + Passport)
+### Front EJS (Fase 3 — API-first con JWT)
 
-Mientras exista el sitio con sesión por cookie, el middleware de API también acepta **sesión Passport** si **no** se envía `Authorization: Bearer`. Flujo típico legado: login web con `POST /singin` y cookie `connect.sid`.
+- **Login:** la vista `app/views/pages/singin.ejs` llama a **`POST /api/v1/auth/login`**, guarda `accessToken` y `refreshToken` en **`sessionStorage`** y enruta según `GET /api/v1/users/me` (admin → `/dashboard`).
+- **Cliente:** `app/public/javascript/api-client.js` inyecta `Authorization: Bearer`, renueva una vez con **`POST /api/v1/auth/refresh`** ante un **401**, y expone `login` / `logout` / `me` / `apiJson`.
+- **Backoffice:** `auth-guard.js` + `page-*.js` protegen formularios y listados en **cliente**; el servidor ya no bloquea esas rutas HTML con Passport (la seguridad efectiva del ABM es el **JWT** + rol en API).
+- **Riesgo:** tokens en `sessionStorage` son visibles a XSS; la evolución recomendada es cookie **httpOnly** + front híbrido (Astro/React).
+
+### Rutas web legadas (deprecadas)
+
+| Ruta | Estado |
+|------|--------|
+| `POST /singin` | **410** — usar `POST /api/v1/auth/login` |
+| `POST /addproduct`, `POST /addservice`, `POST /addcategory`, `POST /editproduct/:id`, `POST /editservice/:id` | **410** — usar `POST/PUT /api/v1/...` |
+| `GET /deleteproduct/:id`, `GET /deleteservice/:id`, `GET /deletecategory/:id` | **410** — usar `DELETE /api/v1/...` |
+
+### Compatibilidad (API + sesión)
+
+El middleware de API puede aceptar **sesión Passport** si **no** se envía `Authorization: Bearer` (útil para pruebas o herramientas que comparten cookie). El panel EJS **no** depende de este modo.
 
 Para **Swagger**, usá **Authorize** con el `accessToken` del login API.
 
@@ -85,8 +100,9 @@ En desarrollo (`NODE_ENV=development`) el manejador puede incluir `stack` para d
 
 ## Evolución hacia Astro / React
 
-- **Front público y backoffice** pueden consumir solo `/api/v1` con Bearer.
-- El panel EJS y `passport` pueden retirarse por fases cuando el nuevo front cubra todas las pantallas.
+- **Front público y backoffice** pueden consumir solo `/api/v1` con Bearer (igual que el cliente actual en `public/javascript/`).
+- El esqueleto EJS puede retirarse cuando el nuevo front cubra todas las pantallas; **Passport** puede quedar solo para registro/cierre de cookie si hace falta.
+- **Patrón recomendado en Astro:** páginas estáticas + `fetch` en servidor (tokens en cookie httpOnly) o islands React con el mismo contrato OpenAPI.
 
 ## Base de datos
 

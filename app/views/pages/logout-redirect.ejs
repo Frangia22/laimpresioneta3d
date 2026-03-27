@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="/javascript/api-client.js"></script>
+</head>
+<body>
+<script>
+  try {
+    if (window.LaimpresionetaApi && window.LaimpresionetaApi.clearTokens) {
+      window.LaimpresionetaApi.clearTokens();
+    }
+  } catch (e) {}
+  window.location.replace('/');
+</script>
+<p style="font-family:sans-serif;padding:1rem">Cerrando sesión…</p>
+</body>
+</html>

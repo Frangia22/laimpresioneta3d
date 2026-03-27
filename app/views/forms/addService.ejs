@@ -21,21 +21,21 @@
             </div>
         </div>
         <% } %>
-    <form action="/addservice" class="w-1/2 mx-auto p-4" method="post">
+    <form id="add-service-form" class="w-1/2 mx-auto p-4" method="post" action="#">
         <label for="nombre" class="flex flex-col py-2">
             Nombre
-            <input id="nombre" type="text" value="<%= data.name || '' %>" name="name" placeholder="Nombre del servicio" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name">
+            <input id="nombre" type="text" value="<%= data && data.name ? data.name : '' %>" name="name" placeholder="Nombre del servicio" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name" required>
         </label>     
         <label for="iconService" class="flex flex-col py-2">
             Ruta icono servicio
             <div class="flex flex-row-reverse">
-                <input id="iconService" type="text" value="<%= data.iconService || '' %>" placeholder="../images/sinImagen.webp" name="iconService" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off">
+                <input id="iconService" type="text" value="<%= data && data.iconService ? data.iconService : '' %>" placeholder="../images/sinImagen.svg" name="iconService" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" required>
             </div>
         </label>
         <label for="details" class="flex flex-col py-2">
             Detalles
             <div class="flex flex-row-reverse">
-                <textarea id="details" type="text" placeholder="Ingrese los detalles del servicio" name="details" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3"><%= data.details || '' %></textarea>
+                <textarea id="details" type="text" placeholder="Ingrese los detalles del servicio" name="details" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3" required><%= data && data.details ? data.details : '' %></textarea>
             </div>
         </label>
         <button type="submit" class="bg-yellow-500 py-2 px-6 rounded-xl mt-2 font-bold text-violet hover:text-white mx-auto flex">Agregar Servicio</button>

@@ -1,82 +1,80 @@
 <nav class="bg-violet text-white shadow-lg block">
     <div class="container flex items-center mx-auto justify-around h-24">
-      <a href="" class="flex items-center justify-center">
+      <a href="/" class="flex items-center justify-center">
         <img class="h-16" src="../images/3dprinter.svg" alt="La impresioneta 3d" />
         <span class="ml-4 uppercase font-black">La impresioneta 3D</span>
       </a>
-      <!-- Solo se muestra si es menor a 640 -->
-      <button id="switchMenu" class="md:hidden hover:rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"><img class="h-12 p-1" src="../images/burger.svg" alt="Menu" /></button>
-      <!-- Apartir de 768 se muestra en pantalla -->
+      <button type="button" id="switchMenu" class="md:hidden hover:rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow" aria-expanded="false" aria-controls="mobile-menu"><img class="h-12 p-1" src="../images/burger.svg" alt="Menu" /></button>
       <div class="contents hidden md:block font-semibold text-base lg:text-lg">
         <ul class="flex items-center">
-          <% if (user) { %>
-            <li class="p-5 xl:p-8">
-              <a>
-                <span class="text-yellow-500">Bienvenido, <%= user.name %></span>
-              </a>
+            <li class="jwt-nav-auth-only hidden p-5 xl:p-8">
+              <span class="text-yellow-500">Bienvenido, <span class="jwt-user-name"></span></span>
             </li>
-            <% } %>
           <li class="p-5 xl:p-8 active">
             <a href="/">
               <span>Inicio</span>
             </a>
           </li>
-          <% if (!user) { %>
           <li class="p-5 xl:p-8 hidden lg:block">
             <a href="/#service">
               <span>Servicios</span>
             </a>
           </li>
-          <% } %>
           <li class="p-5 xl:p-8">
             <a href="/products">
               <span>Productos</span>
             </a>
           </li>
-          <% if (!user) { %>
+            <li class="jwt-nav-admin-only hidden p-5 xl:p-8">
+              <a href="/dashboard"><span>Usuarios</span></a>
+            </li>
+            <li class="jwt-nav-admin-only hidden p-5 xl:p-8">
+              <a href="/categorys"><span>Categorías</span></a>
+            </li>
+            <li class="jwt-nav-admin-only hidden p-5 xl:p-8">
+              <a href="/addProduct"><span>Nuevo producto</span></a>
+            </li>
+            <li class="jwt-nav-admin-only hidden p-5 xl:p-8">
+              <a href="/addService"><span>Nuevo servicio</span></a>
+            </li>
           <li class="p-5 xl:p-8 hidden lg:block">
             <a href="/#contact">
               <span>Contacto</span>
             </a>
           </li>
-          <% } %>
-          <% if (user) { %>
-          <li class="p-5 xl:p-8">
+          <li class="jwt-nav-auth-only hidden p-5 xl:p-8">
             <a href="/logout">
               <span>Cerrar sesión</span>
             </a>
           </li>
-          <% } %>
         </ul>
       </div>
     </div>
-    <!-- Mobile menu, show/hide based on menu state. -->
   <div class="hidden" id="mobile-menu">
     <div class="space-y-1 px-2 pb-3 pt-2">
-      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
       <a href="/" class="hover:bg-violet-500 text-center text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Inicio</a>
-
       <a href="/#service" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Servicios</a>
-
       <a href="/products" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Productos</a>
-
+      <span class="jwt-nav-admin-only hidden block"><a href="/dashboard" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Usuarios</a></span>
+      <span class="jwt-nav-admin-only hidden block"><a href="/categorys" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Categorías</a></span>
+      <span class="jwt-nav-admin-only hidden block"><a href="/addProduct" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Nuevo producto</a></span>
+      <span class="jwt-nav-admin-only hidden block"><a href="/addService" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Nuevo servicio</a></span>
       <a href="/#contact" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Contacto</a>
-      
+      <span class="jwt-nav-auth-only jwt-nav-welcome-mobile hidden block text-center text-yellow-500 py-2">Hola, <span class="jwt-user-name"></span></span>
+      <span class="jwt-nav-auth-only hidden block">
         <a href="/logout" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Cerrar sesión</a>
-      
+      </span>
       </div>
   </div>
   </nav>
   <script>
-    const menu = document.querySelector('#switchMenu');
-    const showMenu = document.querySelector('#mobile-menu');
-    const openMenu = document.querySelector('#openMenu');
-    const closeMenu = document.querySelector('#closeMenu');
-    menu.addEventListener('click', () => {
-      showMenu.classList.toggle('hidden');
-      openMenu.classList.toggle('hidden');
-      closeMenu.classList.toggle('hidden');
-    });
+    (function () {
+      var menuBtn = document.querySelector('#switchMenu');
+      var panel = document.querySelector('#mobile-menu');
+      if (!menuBtn || !panel) return;
+      menuBtn.addEventListener('click', function () {
+        var open = panel.classList.toggle('hidden') === false;
+        menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    })();
   </script>
-  
-  

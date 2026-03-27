@@ -28,53 +28,14 @@
           </div>
         </div>
       <% } %>
-      <div class="md:flex justify-around flex-row">
-        <% services.forEach(service => { %>
-        <div class="basis-1/4 my-6 rounded-xl">
-          <div class="flex-col bg-violet-500 py-12">
-            <img class="mx-auto w-14 mb-6" src="<%= service.iconService %>" alt="">
-            <p class="w-3/4 mx-auto text-white"><%= service.details %></p>
-            <% if (user) {%>
-              <% if (user.roleId == 1) {%>
-                <div class="flex justify-evenly mx-auto my-4">
-                  <a class="text-3xl text-yellow hover:text-green-600 ri-edit-line" href="/editservice/<%= service.id %>"></a>
-                  <a class="text-3xl text-yellow hover:text-red-600 ri-delete-bin-2-line" href="/deleteservice/<%= service.id %>"></a>
-                </div>
-              <% } %>
-            <% } %>
-          </div>
-        </div>
-        <% }) %>
+      <div id="home-services-root" class="md:flex justify-around flex-row">
+        <p class="text-center text-white w-full py-6">Cargando servicios…</p>
       </div>
     </section>
     <section class="w-full bg-transparent">
       <h1 class="text-4xl text-center text-white py-10">Productos</h1>
-      <% if (products == 0) { %>
-        <div class="flex lg:w-1/2 mx-auto shadow-lg rounded-lg" id="alert">
-            <div class="bg-red-600 py-4 px-6 rounded-l-lg flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current text-white" width="20" height="20"><path fill-rule="evenodd" d="M4.47.22A.75.75 0 015 0h6a.75.75 0 01.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 01-.22.53l-4.25 4.25A.75.75 0 0111 16H5a.75.75 0 01-.53-.22L.22 11.53A.75.75 0 010 11V5a.75.75 0 01.22-.53L4.47.22zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5H5.31zM8 4a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 8a1 1 0 100-2 1 1 0 000 2z"></path></svg>
-            </div>
-            <div class="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
-              <div>Lo siento en este momento estamos renovando el stock, no tenemos productos para mostrar</div>
-              <button type="submit" id="closeAlert">
-                <svg xmlns="http://www.w3.org/2000/svg" class="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
-              </button>
-            </div>
-          </div>
-    <% } %>
-      <div class="md:flex justify-around flex-row flex-wrap">
-        <% products.forEach(product => { %>
-        <div class="basis-1/2 lg:basis-1/6 my-6 rounded-xl">
-          <div class="flex-col bg-violet-500 md:mx-6 lg:mx-auto">
-            <img class="rounded-t-xl w-full h-44 object-contain bg-white" src="<%= product.image %>" alt="<%= product.name %>">
-            <div class="py-4 text-center h-64 lg:flex lg:flex-col lg:justify-around">
-              <h1 class="text-2xl text-center p-2 text-white"><%= product.name %></h1>
-              <h2 class="text-2xl text-center py-2 text-yellow">$ <%= product.price %></h2>
-              <button class="mx-auto my-6" onclick="showDetails('<%= product.name %>', '<%= product.price %>', '<%= product.details %>','<%= product.image %>', '<%= product.idCategory %>')"><a class="rounded-3xl bg-yellow px-8 py-1 text-2xl font-semibold text-violet hover:text-white hover:bg-violet focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500">Detalles</a></button>
-            </div>
-          </div>
-        </div>
-        <% }) %>
+      <div id="home-products-root" class="md:flex justify-around flex-row flex-wrap">
+        <p class="text-center text-gray-300 w-full py-6">Cargando productos…</p>
       </div>
       <div id="productModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden">
             <div class="bg-gray-100 bg-opacity-75 rounded shadow p-6 w-full lg:w-1/2">
@@ -83,7 +44,7 @@
                     <h2 id="productName" class="text-2xl font-semibold"></h2>
                     </div>
                     <div class="lg:flex rounded-lg bg-transparent">
-                    <img class="rounded-t-lg lg:rounded-l-lg lg:w-1/2 h-44 w-full lg:h-96 object-contain bg-white" id="productImage" />
+                    <img class="rounded-t-lg lg:rounded-l-lg lg:w-1/2 h-44 w-full lg:h-96 object-contain bg-white" id="productImage" alt="" />
                     <div class="p-6 rounded-b-lg rounded-none lg:rounded-r-lg bg-violet-500 lg:w-1/2 lg:flex lg:flex-col lg:justify-around">
                         <h5 id="productPrice" class="mb-2 text-xl font-medium leading-tight text-white"></h5>
                         <ul id="productDescription" class="my-4"></ul>
@@ -121,5 +82,6 @@
     <%- include('./partials/footer.ejs') %>
     <script src="/javascript/effects.js"></script>
     <script src="/javascript/details.js"></script>
+    <script src="/javascript/page-home.js" defer></script>
   </body>
 </html>

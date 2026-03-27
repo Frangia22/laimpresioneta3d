@@ -4,8 +4,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const db = require('../models');
 const apiUsers = require('../api/users');
-const { check, validationResult, body } = require('express-validator');
-const { isAuthenticated, isAdmin } = require('../controllers/auth');
+const { validationResult, body } = require('express-validator');
 let user;
 passport.use(
   new LocalStrategy(
@@ -53,18 +52,18 @@ var router = express.Router();
 /* GET loginAdmin */
 router.get('/admin', async(req, res) => {
   user = req.user
-    const errorMessage = req.flash('error')[0];
+  const errorMessage = req.session.errorMessages;
   const successMessage = req.session.successMessage;
   req.session.successMessage = null;
   res.render('pages/singin', { title: 'Administración', errorMessage, user, successMessage});
 });
-/* POST SingIn */
-router.post('/singin', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/admin',
-    failureFlash: true,
-}
-))
+/* POST SingIn — deprecado: usar POST /api/v1/auth/login + JWT */
+router.post('/singin', (req, res) => {
+  res.status(410).json({
+    code: 'LEGACY_DEPRECATED',
+    message: 'Este flujo fue reemplazado. Usá POST /api/v1/auth/login y guardá accessToken/refreshToken en el cliente.',
+  });
+});
 /* GET singUp */
 router.get('/singup', async(req, res) => {
   user = req.user
@@ -129,13 +128,11 @@ router.get('/logout', (req, res, next) => {
     if (err) {
       return next(err);
     } else {
-      res.redirect('/');
+      res.render('pages/logout-redirect', { title: 'Cerrando sesión' });
     }
   });
 });
-router.get('/dashboard', isAuthenticated, isAdmin, async(req, res) => {
-  user = req.user;
-  const users = await apiUsers.getUsers();
-  res.render('pages/dashboard', { title: 'Usuarios', user, users});
+router.get('/dashboard', async (req, res) => {
+  res.render('pages/dashboard', { title: 'Usuarios', user: null, users: [] });
 });
 module.exports = router

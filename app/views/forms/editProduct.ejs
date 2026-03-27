@@ -3,51 +3,46 @@
     <%- include('../partials/head.ejs') %>
 <body>
     <%- include('../partials/nav.ejs') %>
+    <script>window.__EDIT_PRODUCT_ID__ = <%= Number(product.id) %>;</script>
 <section class="bg-violet-500 lg:w-1/2 mx-auto my-10">
-    <form action="/editproduct/<%= product.id %>" class="w-1/2 mx-auto p-4" method="post">
+    <form id="edit-product-form" class="w-1/2 mx-auto p-4" method="post" action="#">
         <label for="nombre" class="flex flex-col py-2">
             Nombre
-            <input id="nombre" type="text" name="name" value="<%= product.name %>" placeholder="Nombre del producto" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name">
+            <input id="nombre" type="text" name="name" value="" placeholder="Nombre del producto" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name" required>
         </label>
             <label for="price" class="flex flex-col py-2">
                 Precio
-                <input id="price" type="number" name="price" value="<%= product.price %>" class="rounded-2xl py-2 px-4 my-2 font-sans" placeholder="$1500" autocomplete="cc-number">
+                <input id="price" type="number" name="price" value="" class="rounded-2xl py-2 px-4 my-2 font-sans" placeholder="$1500" autocomplete="off" required>
             </label>      
         <label for="image" class="flex flex-col py-2">
             Ruta imagen
             <div class="flex flex-row-reverse">
-                <input id="image" type="text" placeholder="../images/sinImagen.webp" value="<%= product.image %>" name="image" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off">
+                <input id="image" type="text" placeholder="../images/sinImagen.svg" value="" name="image" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" required>
             </div>
         </label>
         <label for="details" class="flex flex-col py-2">
             Detalles
             <div class="flex flex-row-reverse">
-                <textarea id="details" type="text" placeholder="Separe los detalles con ;" name="details" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3"><%= product.details %></textarea>
+                <textarea id="details" type="text" placeholder="Separe los detalles con ;" name="details" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3" required></textarea>
             </div>
         </label>
         <label for="linkPago" class="flex flex-col py-2">
             Link de pago(opcional)
             <div class="flex flex-row-reverse">
-                <input id="linkPago" type="text" name="linkPago" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off">
+                <input id="linkPago" type="text" name="linkPago" value="" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off">
             </div>
         </label>
         <label for="otherDetails" class="flex flex-col py-2">
             Otros detalles
             <div class="flex flex-row-reverse">
-                <textarea id="otherDetails" type="text" placeholder="Separe los detalles con ;" name="otherDetails" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3"><%= product.otherDetails %></textarea>
+                <textarea id="otherDetails" type="text" placeholder="Separe los detalles con ;" name="otherDetails" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3"></textarea>
             </div>
         </label>
         <label for="idCategory" class="flex flex-col py-2">
             Categoria
             <div class="flex flex-row-reverse">
-                <select name="idCategory" id="idCategory" class="rounded-2xl py-2 px-4 my-2 w-full focus:border-green-200 focus:ring-green-200 font-sans">
-                    <% categorys.forEach(category => { %>
-                        <% if (product.idCategory == category.id) { %>
-                            <option selected class="rounded-2xl py-2 px-4 my-2 w-full" value="<%= category.id %>"><%= category.name %></option>
-                        <% }else { %>
-                    <option class="rounded-2xl py-2 px-4 my-2 w-full" value="<%= category.id %>"><%= category.name %></option>
-                    <% } %>
-                    <% }) %>
+                <select name="idCategory" id="idCategory" class="rounded-2xl py-2 px-4 my-2 w-full focus:border-green-200 focus:ring-green-200 font-sans" required>
+                    <option value="">Cargando…</option>
                 </select>
             </div>
         </label>
@@ -55,6 +50,8 @@
     </form>
 </section>
 <%- include('../partials/footer.ejs') %> 
+    <script src="/javascript/auth-guard.js" defer></script>
+    <script src="/javascript/page-edit-product.js" defer></script>
     <script>
         const footer = document.querySelector('footer');
         footer.classList.remove('sticky', 'top-[100vh]');

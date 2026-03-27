@@ -20,8 +20,18 @@
         footer.classList.remove('sticky', 'top-[100vh]');
         function hideMessage() {
             const alert = document.getElementById('alert');
-            alert.classList.add('hidden');
+            if (alert) alert.classList.add('hidden');
         }
-    </script>   
+    </script>
+    <% if (title === "Agregar producto") { %>
+    <script src="/javascript/auth-guard.js" defer></script>
+    <script src="/javascript/page-add-product.js" defer></script>
+    <% } else if (title === "Agregar servicio") { %>
+    <script src="/javascript/auth-guard.js" defer></script>
+    <script src="/javascript/page-add-service.js" defer></script>
+    <% } else if (title === "Categorias") { %>
+    <script src="/javascript/auth-guard.js" defer></script>
+    <script src="/javascript/page-categories.js" defer></script>
+    <% } %>
 </body>
 </html>

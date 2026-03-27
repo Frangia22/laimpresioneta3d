@@ -20,7 +20,7 @@
                     <% }); %>
                 </ul>
             <% } %>
-            <button type="submit" onclick="hideMessage()">
+            <button type="button" onclick="hideMessage()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
             </button>
         </div>
@@ -38,25 +38,8 @@
                                 <th class="py-3 md:px-6 text-center">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-600 text-sm font-light">
-                            <% categorys.forEach(category => { %>
-                            <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                <td class="py-3 px-6 text-left whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <span class="font-medium"><%= category.name %></span>
-                                    </div>
-                                </td>
-                                <td class="py-3 md:px-6 text-center">
-                                    <div class="flex item-center justify-center">        
-                                        <div class="w-5 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                            <a href="/deletecategory/<%= category.id %>"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg></a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <% }) %>
+                        <tbody id="categories-tbody" class="text-gray-600 text-sm font-light">
+                            <tr><td colspan="2" class="py-6 text-center">Cargando…</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -66,10 +49,10 @@
 </section>
 <section class="bg-violet w-full mx-auto lg:my-2 py-8">
     <h1 class="text-4xl text-center text-yellow py-10">Agregar Categorias</h1>
-    <form action="/addcategory" class="w-1/2 bg-violet-500 mx-auto p-4" method="post">
-        <label for="nombre" class="flex flex-col py-2 lg:w-1/2 mx-auto">
+    <form id="add-category-form" class="w-1/2 bg-violet-500 mx-auto p-4" method="post" action="#">
+        <label for="nombre-categoria" class="flex flex-col py-2 lg:w-1/2 mx-auto">
             Nombre
-            <input id="nombre" type="text" name="name" value="<%= data.name || '' %>" placeholder="Nombre de la categoria" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name">
+            <input id="nombre-categoria" type="text" name="name" value="<%= data && data.name ? data.name : '' %>" placeholder="Nombre de la categoria" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name" required>
         </label>
         <button type="submit" class="bg-yellow-500 py-2 px-6 rounded-xl mt-2 font-bold text-violet hover:text-white mx-auto flex">Agregar</button>
     </form>
