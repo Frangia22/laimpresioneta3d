@@ -29,6 +29,14 @@ JWT_REFRESH_EXPIRES_IN=7d
 
 Sin estas claves, `login` y `refresh` responderán error de configuración del servidor.
 
+### Primer usuario administrador
+
+- **No hay** endpoint público de registro con rol admin (por diseño).
+- **`POST /api/v1/auth/login`** solo autentica usuarios que ya existan en la base con contraseña hash correcta.
+- El registro HTML **`/singup`** crea usuarios con **`roleId` 2** (usuario estándar), no administrador.
+
+Para crear el primer admin en instalaciones nuevas, usá el script documentado en el README: desde `app/` ejecutá **`npm run seed:admin`** con `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD` y opcionalmente `BOOTSTRAP_ADMIN_NAME` / `BOOTSTRAP_ADMIN_FORCE` definidos en `app/.env` o en el entorno.
+
 ### Front EJS (Fase 3 — API-first con JWT)
 
 - **Login:** la vista `app/views/pages/singin.ejs` llama a **`POST /api/v1/auth/login`**, guarda `accessToken` y `refreshToken` en **`sessionStorage`** y enruta según `GET /api/v1/users/me` (admin → `/dashboard`).
