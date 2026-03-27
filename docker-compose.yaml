@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
     app:
-        #image: node18 #Construir imagen del Dockerfile, puede quitar esta linea, colocando la siguiente: build: ./app
         build: ./app
         env_file: ./.env
         ports:
@@ -10,20 +9,44 @@ services:
         volumes:
             - ./app:/app
         environment:
-            MYSQL_HOST: mysql
-            MYSQL_USER: $DB_USER #root
-            MYSQL_PASSWORD: $DB_PASS #secret
-            MYSQL_DB: $DB_NAME
+            NODE_ENV: development
+            DB_HOST: postgres
+            DB_PORT: ${DB_PORT}
+            DB_USER: ${DB_USER}
+            DB_PASS: ${DB_PASS}
+            DB_NAME: ${DB_NAME}
+            DB_DIALECT: postgres
 
-    mysql:
-          image: mysql:5.7
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 512M
+                reservations:
+                    cpus: '0.25'
+                    memory: 256M
+        depends_on:
+            - postgres
+
+    postgres:
+          image: postgres:18-alpine
           env_file: ./.env
           ports:
-            - 3307:3306
+            - ${DB_PORT}:5432
           volumes:
-            - app:/var/lib/mysql
+            - pgdata:/var/lib/postgresql/data
           environment:
-              MYSQL_ROOT_PASSWORD: $DB_PASS
-              MYSQL_DATABASE: $DB_NAME
+              POSTGRES_USER: ${DB_USER}
+              POSTGRES_PASSWORD: ${DB_PASS}
+              POSTGRES_DB: ${DB_NAME}
+          deploy:
+            resources:
+                limits:
+                    cpus: '0.75'
+                    memory: 768M
+                reservations:
+                    cpus: '0.25'
+                    memory: 256M
+
 volumes:
-    app:
+    pgdata:

@@ -30,7 +30,7 @@ db.sequelize.sync().then(() => {
   server.listen(port);
   //initial();
   server.on('error', onError);
-  server.on('listening !!', onListening);
+  server.on('listening', onListening);
 });
 //Creo los roles
 /*function initial() {

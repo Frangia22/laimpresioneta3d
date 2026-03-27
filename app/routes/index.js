@@ -137,7 +137,7 @@ router.get('/deleteproduct/:id',isAuthenticated, isAdmin, async(req, res) =>{
 });
 router.get('/deleteservice/:id',isAuthenticated, isAdmin, async(req, res) =>{
   user = req.user;
-  const services = await apiServices.getServices;
+  const services = await apiServices.getServices();
   const affectedRows = await apiServices.deleteService(req.params.id);
   if (affectedRows > 0){
     req.session.message = 'Servicio eliminado con exito!!'

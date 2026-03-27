@@ -1,24 +1,26 @@
 {
   "development": {
-    "username": "root",
-    "password": "laimpresioneta",
+    "username": "postgres",
+    "password": "SinergyStack-2026!",
     "database": "laimpresioneta",
-    "host": "192.168.0.159",
-    "dialect": "mysql",
-    "port": "3307"
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": "5432"
   },
   "test": {
-    "username": "root",
-    "password": "laimpresioneta",
+    "username": "postgres",
+    "password": "SinergyStack-2026!",
     "database": "laimpresioneta",
-    "host": "192.168.0.159",
-    "dialect": "mysql"
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": "5432"
   },
   "production": {
-    "username": "root",
-    "password": "laimpresioneta",
+    "username": "postgres",
+    "password": "SinergyStack-2026!",
     "database": "laimpresioneta",
-    "host": "192.168.0.159",
-    "dialect": "mysql"
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": "5432"
   }
 }

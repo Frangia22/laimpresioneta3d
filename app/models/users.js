@@ -21,7 +21,7 @@ const users = sequelize.define('users', {
     roleId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: '2'
+        defaultValue: 2
       }    
 }, {
     timestamps: false

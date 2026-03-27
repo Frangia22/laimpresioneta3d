@@ -5,7 +5,17 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'production';
-const config = require(__dirname + '/../config/config.json')[env];
+const fileConfig = require(__dirname + '/../config/config.json')[env];
+const config = { ...fileConfig };
+
+// Permite alinear Docker/servidor con el mismo código sin editar JSON
+if (process.env.DB_HOST) config.host = process.env.DB_HOST;
+if (process.env.DB_PORT) config.port = process.env.DB_PORT;
+if (process.env.DB_USER) config.username = process.env.DB_USER;
+if (process.env.DB_PASS !== undefined) config.password = process.env.DB_PASS;
+if (process.env.DB_NAME) config.database = process.env.DB_NAME;
+if (process.env.DB_DIALECT) config.dialect = process.env.DB_DIALECT;
+
 const db = {};
 
 let sequelize;
