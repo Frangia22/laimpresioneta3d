@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <%- include('./partials/head.ejs') %>
   <body>
     <%- include('./partials/header.ejs') %>
     <%- include('./partials/nav.ejs') %>
-    <section class="w-full h-30em bg-portada flex items-center justify-center">
-      <h1 class="text-yellow-500 hover:underline hover:decoration-double hover:decoration-amber-500 text-3xl w-2/4 text-center">Transformando ideas en realidad, con impresión 3D y grabado láser</h1>
+    <% 
+      var waPhone = String(publicContact.whatsappPhone || '').replace(/\D/g, '');
+      var waPresupuesto = 'https://api.whatsapp.com/send?phone=' + encodeURIComponent(waPhone) + '&text=' + encodeURIComponent('Hola, quiero pedir un presupuesto para impresión 3D / grabado láser.');
+      var waConsulta = 'https://api.whatsapp.com/send?phone=' + encodeURIComponent(waPhone) + '&text=' + encodeURIComponent('Hola, tengo una consulta sobre sus servicios.');
+    %>
+    <section class="w-full min-h-[30em] bg-portada hero-portada flex flex-col items-center justify-center px-4 py-16">
+      <div class="hero-portada-inner flex flex-col items-center gap-8 max-w-3xl">
+        <h1 class="text-yellow text-3xl md:text-4xl lg:text-5xl font-extrabold text-center leading-tight tracking-tight drop-shadow-lg">Transformando ideas en realidad, con impresión 3D y grabado láser</h1>
+        <p class="text-white text-center text-base md:text-lg font-medium opacity-95 max-w-xl drop-shadow-md">Modelos, piezas personalizadas y grabado láser. Contanos tu proyecto y te asesoramos.</p>
+        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 w-full">
+          <a href="<%= waPresupuesto %>" rel="noopener noreferrer" target="_blank" class="u-cta-yellow inline-flex items-center justify-center rounded-2xl px-8 py-3.5 text-lg md:text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow w-full sm:w-auto text-center">Pedir presupuesto por WhatsApp</a>
+          <a href="/#contact" class="u-cta-outline inline-flex items-center justify-center rounded-2xl px-8 py-3.5 text-lg md:text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow w-full sm:w-auto text-center">Otros medios de contacto</a>
+        </div>
+      </div>
     </section>
     <section id="service" class="w-full xl:h-30em bg-violet pb-12">
-      <h1 class="text-4xl text-center text-yellow py-10">Servicios</h1>
+      <h2 class="text-4xl text-center text-yellow py-10">Servicios</h2>
       <% if (message) { %>
         <div class="flex lg:w-1/2 mx-auto shadow-lg rounded-lg" id="alert">
           <% if (message == "Servicio editado con exito!!" || message == "Servicio eliminado con exito!!" || message == "Servicio agregado con exito!!") { %>
@@ -22,7 +34,7 @@
               <% } %>
           <div class="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
             <div><%= message %></div>
-            <button type="submit" onclick="hideMessage()">
+            <button type="button" onclick="hideMessage()">
               <svg xmlns="http://www.w3.org/2000/svg" class="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
             </button>
           </div>
@@ -32,49 +44,56 @@
         <p class="text-center text-white w-full py-6">Cargando servicios…</p>
       </div>
     </section>
-    <section class="w-full bg-transparent">
-      <h1 class="text-4xl text-center text-white py-10">Productos</h1>
-      <div id="home-products-root" class="md:flex justify-around flex-row flex-wrap">
-        <p class="text-center text-gray-300 w-full py-6">Cargando productos…</p>
+    <section class="w-full bg-transparent pb-8">
+      <div class="section-readable py-8 md:py-10 mb-2">
+        <h2 class="section-readable-title text-3xl md:text-4xl font-extrabold text-center text-yellow px-4">Productos</h2>
+        <p class="text-center text-white/90 text-sm md:text-base mt-3 max-w-xl mx-auto px-4">Seleccioná un item para ver detalles y comprar por WhatsApp.</p>
       </div>
-      <div id="productModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden">
-            <div class="bg-gray-100 bg-opacity-75 rounded shadow p-6 w-full lg:w-1/2">
-                <div class="flex flex-row-reverse justify-between items-center mb-2">
-                    <span class="text-right text-5xl block cursor-pointer ri-close-line hover:text-red-500" onclick="hideDetails()"></span>
-                    <h2 id="productName" class="text-2xl font-semibold"></h2>
-                    </div>
-                    <div class="lg:flex rounded-lg bg-transparent">
-                    <img class="rounded-t-lg lg:rounded-l-lg lg:w-1/2 h-44 w-full lg:h-96 object-contain bg-white" id="productImage" alt="" />
-                    <div class="p-6 rounded-b-lg rounded-none lg:rounded-r-lg bg-violet-500 lg:w-1/2 lg:flex lg:flex-col lg:justify-around">
-                        <h5 id="productPrice" class="mb-2 text-xl font-medium leading-tight text-white"></h5>
-                        <ul id="productDescription" class="my-4"></ul>
-                        <a id="textBtn" class="block rounded bg-yellow px-6 pb-2 pt-2.5 text-sm text-center font-bold text-violet hover:text-white">
-                        </a>
-                    </div>
+      <div id="home-products-root" class="md:flex justify-around flex-row flex-wrap gap-4 px-2 md:px-4">
+        <p class="panel-muted text-center w-full max-w-md mx-auto py-8 px-4 font-medium">Cargando productos…</p>
+      </div>
+      <div id="productModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-75 p-4" role="dialog" aria-modal="true" aria-labelledby="productName">
+        <div class="bg-gray-100 bg-opacity-95 rounded shadow-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto" data-product-modal-panel>
+            <div class="flex flex-row-reverse justify-between items-center gap-2 mb-2">
+                <button type="button" class="text-5xl leading-none bg-transparent border-0 cursor-pointer text-violet hover:text-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500 ri-close-line" id="productModalClose" aria-label="Cerrar detalle del producto"></button>
+                <h2 id="productName" class="text-2xl font-semibold pr-2"></h2>
+                </div>
+                <div class="lg:flex rounded-lg bg-transparent">
+                <img class="rounded-t-lg lg:rounded-l-lg lg:w-1/2 h-44 w-full lg:h-96 object-contain bg-white" id="productImage" alt="" />
+                <div class="p-6 rounded-b-lg rounded-none lg:rounded-r-lg bg-violet-500 lg:w-1/2 lg:flex lg:flex-col lg:justify-around">
+                    <p id="productPrice" class="mb-2 text-xl font-medium leading-tight text-white"></p>
+                    <ul id="productDescription" class="my-4 list-none p-0"></ul>
+                    <a id="textBtn" class="block rounded bg-yellow px-6 pb-2 pt-2.5 text-sm text-center font-bold text-violet hover:text-white hover:bg-[#390097] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"></a>
+                    <button type="button" id="textBtnOutOfStock" class="hidden w-full rounded bg-red-400 px-6 pb-2 pt-2.5 text-sm text-center font-bold text-white cursor-not-allowed opacity-90" disabled>Sin stock</button>
                 </div>
             </div>
         </div>
-      <button class="block mx-auto my-8 py-10"><a href="/products" class="rounded-3xl bg-yellow px-12 py-2.5 text-2xl font-semibold text-violet hover:text-white hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500">Ver más</a></button>
+      </div>
+      <a href="/products" class="u-cta-yellow block mx-auto my-10 w-fit rounded-2xl px-10 py-4 text-xl md:text-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow text-center">Ver catálogo completo</a>
     </section>
     <section id="contact" class="w-full md:h-30em bg-violet pb-12">
-      <h1 class="text-4xl text-center text-yellow py-10">Contacto</h1>
+      <h2 class="text-4xl text-center text-yellow py-10">Contacto</h2>
+      <p class="text-center text-white/90 max-w-2xl mx-auto px-4 pb-6">Elegí el canal que prefieras. Respondemos lo antes posible.</p>
       <div class="md:columns-3 justify-around flex-row">
         <div class="basis-1/4">
           <div class="flex-col text-center bg-transparent py-12">
-            <img class="mx-auto py-4" src="../images/mailIcon.svg" alt="">
-            <p class="w-3/4 mx-auto text-white">Envíanos tu idea, para poder hacerla realidad</p>
+            <img class="mx-auto py-4" src="../images/mailIcon.svg" alt="" aria-hidden="true">
+            <p class="w-3/4 mx-auto text-white mb-4">Escribinos por correo con tu idea o archivos adjuntos.</p>
+            <a href="mailto:<%= publicContact.email %>?subject=Consulta%20impresión%203D" class="inline-block rounded-3xl bg-yellow px-6 py-2 text-lg font-semibold text-violet hover:text-white hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow">Enviar correo</a>
           </div>
         </div>
         <div class="basis-1/4 rounded-xl">
           <div class="flex-col text-center bg-transparent py-12">
-            <img class="mx-auto py-4" src="../images/whatsappIcon.svg" alt="">
-            <p class="w-3/4 mx-auto text-white">Envíanos tu idea, para poder hacerla realidad</p>
+            <img class="mx-auto py-4" src="../images/whatsappIcon.svg" alt="" aria-hidden="true">
+            <p class="w-3/4 mx-auto text-white mb-4">Chateá con nosotros para presupuestos rápidos y consultas.</p>
+            <a href="<%= waConsulta %>" rel="noopener noreferrer" target="_blank" class="inline-block rounded-3xl bg-yellow px-6 py-2 text-lg font-semibold text-violet hover:text-white hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow">Abrir WhatsApp</a>
           </div>
         </div>
         <div class="basis-1/4 rounded-xl">
           <div class="flex-col text-center bg-transparent py-12">
-            <img class="mx-auto py-4" src="../images/instagramIcon.svg" alt="">
-            <p class="w-3/4 mx-auto text-white">Envíanos tu idea, para poder hacerla realidad</p>
+            <img class="mx-auto py-4" src="../images/instagramIcon.svg" alt="" aria-hidden="true">
+            <p class="w-3/4 mx-auto text-white mb-4">Seguinos y mirá trabajos recientes y novedades.</p>
+            <a href="<%= publicContact.instagramUrl %>" rel="noopener noreferrer" target="_blank" class="inline-block rounded-3xl bg-yellow px-6 py-2 text-lg font-semibold text-violet hover:text-white hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow">Ver Instagram</a>
           </div>
         </div>
       </div>

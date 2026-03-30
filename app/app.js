@@ -17,6 +17,13 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const { env } = require('process');
 dotenv.config({ quiet: true });
+
+app.locals.publicContact = {
+  whatsappPhone: process.env.PUBLIC_WHATSAPP_PHONE || '3385436246',
+  email: process.env.PUBLIC_CONTACT_EMAIL || 'contacto@laimpresioneta3d.com',
+  instagramUrl: process.env.PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/',
+};
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

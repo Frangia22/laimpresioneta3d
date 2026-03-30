@@ -24,7 +24,10 @@
       var products = await window.LaimpresionetaApi.apiJson('GET', '/products');
       if (!products || !products.length) {
         root.innerHTML =
-          '<div class="flex lg:w-1/2 mx-auto shadow-lg rounded-lg" id="alert"><p class="py-6 text-white text-center w-full">No hay productos disponibles.</p></div>';
+          '<div id="alert" class="max-w-lg mx-auto rounded-2xl bg-violet px-6 py-10 shadow-xl ring-1 ring-white/15 text-center">' +
+          '<p class="text-yellow font-bold text-lg mb-2">Sin productos por ahora</p>' +
+          '<p class="text-white/95 text-sm leading-relaxed">Estamos renovando el catálogo. Volvé pronto o contactanos por WhatsApp desde el inicio.</p>' +
+          '</div>';
         return;
       }
 
@@ -41,24 +44,27 @@
               '"></button>' +
               '</div>';
           return (
-            '<div class="basis-1/2 lg:basis-1/6 my-6 rounded-xl">' +
-            '<div class="flex-col bg-violet-500 md:mx-6 lg:mx-auto">' +
-            '<img class="rounded-t-xl w-full h-44 object-contain bg-white" src="' +
+            '<div class="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 my-4 px-2">' +
+            '<article class="flex flex-col overflow-hidden rounded-2xl bg-violet-500 shadow-xl ring-1 ring-black/15 transition-shadow duration-200 hover:shadow-2xl hover:ring-yellow/25 md:mx-0 lg:mx-auto h-full">' +
+            '<div class="aspect-[4/3] w-full bg-white flex items-center justify-center p-2">' +
+            '<img class="max-h-full w-full object-contain" src="' +
             escapeHtml(p.image) +
             '" alt="' +
             escapeHtml(p.name) +
             '">' +
-            '<div class="py-4 text-center h-64 lg:flex lg:flex-col lg:justify-around">' +
-            '<h2 class="text-2xl text-center p-2 text-white">' +
+            '</div>' +
+            '<div class="flex flex-col gap-3 px-4 pb-5 pt-4 text-center flex-1">' +
+            '<h3 class="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2 min-h-[2.75rem]">' +
             escapeHtml(p.name) +
-            '</h2>' +
-            '<h3 class="text-2xl text-center py-2 text-yellow">$ ' +
-            escapeHtml(String(p.price)) +
             '</h3>' +
-            '<button type="button" class="jwt-open-product mx-auto my-6 rounded-3xl bg-yellow px-8 py-1 text-2xl font-semibold text-violet hover:text-white hover:bg-violet">Detalles</button>' +
+            '<p class="text-2xl sm:text-3xl font-black text-yellow tracking-tight">' +
+            '$ ' +
+            escapeHtml(String(p.price)) +
+            '</p>' +
+            '<button type="button" class="jwt-open-product mt-auto w-full sm:w-auto mx-auto rounded-xl bg-yellow px-6 py-3 text-base sm:text-lg font-bold text-violet hover:bg-[#390097] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow transition-colors duration-150">Ver detalles</button>' +
             '</div>' +
             (admin || '') +
-            '</div></div>'
+            '</article></div>'
           );
         })
         .join('');

@@ -4,57 +4,58 @@
 <body>
     <%- include('../partials/nav.ejs') %>
     <script>window.__EDIT_PRODUCT_ID__ = <%= Number(product.id) %>;</script>
-<section class="bg-violet-500 lg:w-1/2 mx-auto my-10">
-    <form id="edit-product-form" class="w-1/2 mx-auto p-4" method="post" action="#">
-        <label for="nombre" class="flex flex-col py-2">
-            Nombre
-            <input id="nombre" type="text" name="name" value="" placeholder="Nombre del producto" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name" required>
-        </label>
-            <label for="price" class="flex flex-col py-2">
-                Precio
-                <input id="price" type="number" name="price" value="" class="rounded-2xl py-2 px-4 my-2 font-sans" placeholder="$1500" autocomplete="off" required>
-            </label>      
-        <label for="image" class="flex flex-col py-2">
-            Ruta imagen
-            <div class="flex flex-row-reverse">
-                <input id="image" type="text" placeholder="../images/sinImagen.svg" value="" name="image" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" required>
+<main class="admin-form-shell">
+<section class="admin-form-card bg-violet-500">
+    <h1 class="admin-form-title">Editar producto</h1>
+    <p class="admin-form-subtitle">Modificá los campos y guardá. ID actual: <strong class="text-yellow"><%= product.id %></strong>.</p>
+    <form id="edit-product-form" class="form-stack" method="post" action="#">
+        <div class="form-grid-2">
+            <div>
+                <label for="nombre" class="form-label">Nombre</label>
+                <input id="nombre" type="text" name="name" value="" placeholder="Nombre del producto" class="form-control" autocomplete="name" required>
             </div>
-        </label>
-        <label for="details" class="flex flex-col py-2">
-            Detalles
-            <div class="flex flex-row-reverse">
-                <textarea id="details" type="text" placeholder="Separe los detalles con ;" name="details" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3" required></textarea>
+            <div>
+                <label for="price" class="form-label">Precio</label>
+                <input id="price" type="number" name="price" value="" min="0" step="1" class="form-control" placeholder="1500" autocomplete="off" required>
             </div>
-        </label>
-        <label for="linkPago" class="flex flex-col py-2">
-            Link de pago(opcional)
-            <div class="flex flex-row-reverse">
-                <input id="linkPago" type="text" name="linkPago" value="" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off">
+        </div>
+        <div>
+            <label for="image" class="form-label">Ruta de imagen</label>
+            <input id="image" type="text" placeholder="../images/sinImagen.svg" value="" name="image" class="form-control" autocomplete="off" required>
+        </div>
+        <div>
+            <label for="details" class="form-label">Detalles</label>
+            <textarea id="details" placeholder="Separá cada bullet con ;" name="details" class="form-control" autocomplete="off" rows="4" required></textarea>
+        </div>
+        <div class="form-grid-2">
+            <div>
+                <label for="linkPago" class="form-label">Link de pago <span class="font-normal text-white/70">(opcional)</span></label>
+                <input id="linkPago" type="url" name="linkPago" value="" class="form-control" placeholder="https://…" autocomplete="off">
             </div>
-        </label>
-        <label for="otherDetails" class="flex flex-col py-2">
-            Otros detalles
-            <div class="flex flex-row-reverse">
-                <textarea id="otherDetails" type="text" placeholder="Separe los detalles con ;" name="otherDetails" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off" cols="15" rows="3"></textarea>
-            </div>
-        </label>
-        <label for="idCategory" class="flex flex-col py-2">
-            Categoria
-            <div class="flex flex-row-reverse">
-                <select name="idCategory" id="idCategory" class="rounded-2xl py-2 px-4 my-2 w-full focus:border-green-200 focus:ring-green-200 font-sans" required>
+            <div>
+                <label for="idCategory" class="form-label">Categoría</label>
+                <select name="idCategory" id="idCategory" class="form-control" required>
                     <option value="">Cargando…</option>
                 </select>
             </div>
-        </label>
-        <button type="submit" class="bg-yellow-500 py-2 px-6 rounded-xl mt-2 font-bold text-violet hover:text-white mx-auto flex">Editar producto</button>
+        </div>
+        <div>
+            <label for="otherDetails" class="form-label">Otros detalles <span class="font-normal text-white/70">(opcional)</span></label>
+            <textarea id="otherDetails" placeholder="Separá con ;" name="otherDetails" class="form-control" autocomplete="off" rows="3"></textarea>
+        </div>
+        <div class="admin-actions-row pt-2">
+            <a href="/products" class="btn-secondary-light">Volver al catálogo</a>
+            <button type="submit" class="btn-primary">Actualizar producto</button>
+        </div>
     </form>
 </section>
+</main>
 <%- include('../partials/footer.ejs') %> 
     <script src="/javascript/auth-guard.js" defer></script>
     <script src="/javascript/page-edit-product.js" defer></script>
     <script>
         const footer = document.querySelector('footer');
-        footer.classList.remove('sticky', 'top-[100vh]');
+        if (footer) footer.classList.remove('sticky', 'top-[100vh]');
     </script>   
 </body>
 </html>

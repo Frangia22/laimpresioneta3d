@@ -15,7 +15,7 @@
               <span>Inicio</span>
             </a>
           </li>
-          <li class="p-5 xl:p-8 hidden lg:block">
+          <li class="p-5 xl:p-8">
             <a href="/#service">
               <span>Servicios</span>
             </a>
@@ -37,7 +37,7 @@
             <li class="jwt-nav-admin-only hidden p-5 xl:p-8">
               <a href="/addService"><span>Nuevo servicio</span></a>
             </li>
-          <li class="p-5 xl:p-8 hidden lg:block">
+          <li class="p-5 xl:p-8">
             <a href="/#contact">
               <span>Contacto</span>
             </a>
@@ -50,7 +50,7 @@
         </ul>
       </div>
     </div>
-  <div class="hidden" id="mobile-menu">
+  <div class="hidden md:hidden" id="mobile-menu" role="navigation" aria-label="Menú principal (móvil)">
     <div class="space-y-1 px-2 pb-3 pt-2">
       <a href="/" class="hover:bg-violet-500 text-center text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Inicio</a>
       <a href="/#service" class="text-white text-center hover:bg-violet-500 hover:text-yellow block rounded-md px-3 py-2 text-base font-medium">Servicios</a>
@@ -72,9 +72,36 @@
       var menuBtn = document.querySelector('#switchMenu');
       var panel = document.querySelector('#mobile-menu');
       if (!menuBtn || !panel) return;
-      menuBtn.addEventListener('click', function () {
-        var open = panel.classList.toggle('hidden') === false;
+
+      function isMobileNav() {
+        return window.matchMedia('(max-width: 767px)').matches;
+      }
+
+      function setMenuOpen(open) {
+        if (open) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
         menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      menuBtn.addEventListener('click', function () {
+        setMenuOpen(panel.classList.contains('hidden'));
+      });
+
+      panel.querySelectorAll('a').forEach(function (anchor) {
+        anchor.addEventListener('click', function () {
+          if (isMobileNav()) setMenuOpen(false);
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape' && e.key !== 'Esc') return;
+        if (!isMobileNav()) return;
+        if (panel.classList.contains('hidden')) return;
+        setMenuOpen(false);
+        menuBtn.focus();
       });
     })();
   </script>

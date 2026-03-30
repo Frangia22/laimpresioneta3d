@@ -3,44 +3,50 @@
     <%- include('../partials/head.ejs') %>
 <body>
     <%- include('../partials/nav.ejs') %>
-    <section class="bg-violet-500 lg:w-1/2 mx-auto my-10 lg:absolute lg:top-36 lg:left-1/4">
+    <main class="auth-shell">
+        <div class="auth-card bg-violet-500">
         <% if (errorMessages && errorMessages.length > 0) { %>
-            <div class="flex lg:w-1/2 mx-auto shadow-lg rounded-lg" id="alert">
-                <div class="px-4 py-6 mt-4 bg-yellow-50 border-solid border-2 border-yellow-500  rounded-lg flex justify-between items-center w-full">
-                    <ul>
-                        <% errorMessages.forEach(errorMessage => { %>
-                          <li><i class="ri-alarm-warning-line text-red-500 mx-4"></i><%= errorMessage %></li>
+            <div class="rounded-xl mb-6 overflow-hidden shadow-lg ring-1 ring-red-500/30 bg-white" id="alert" role="alert">
+                <div class="px-4 py-4 flex justify-between items-start gap-3">
+                    <ul class="flex-1 min-w-0 space-y-2">
+                        <% errorMessages.forEach(function (errorMessage) { %>
+                          <li class="text-sm font-medium text-red-800 flex gap-2 items-start">
+                            <i class="ri-alarm-warning-line text-red-600 text-lg shrink-0 mt-0.5" aria-hidden="true"></i>
+                            <span><%= errorMessage %></span>
+                          </li>
                         <% }); %>
                     </ul>
-                  <button type="submit" id="closeAlert">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+                  <button type="button" id="closeAlert" class="shrink-0 p-1 rounded-lg hover:bg-gray-100 text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow" aria-label="Cerrar mensajes">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="fill-current" viewBox="0 0 16 16" width="20" height="20"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
                   </button>
                 </div>
               </div>
               <% } %>
-        <form action="/singUpUsers" class="w-1/2 mx-auto p-4" method="post">
-            <h1 class="text-yellow text-2xl text-center">Registrarse</h1>
-            <label for="nombre" class="flex flex-col py-2">
-                Nombre
-                <input id="nombre" type="text" name="nombre" placeholder="Nombre" value="<%= data.nombre || '' %>" class="rounded-2xl py-2 px-4 my-2 font-sans" autocomplete="name">
-            </label>
-            <div class="relative">
-                <label for="email" class="flex flex-col py-2">
-                    Correo electronico
-                    <input id="email" type="text" name="email" value="<%= data.email || '' %>" class="rounded-2xl py-2 px-4 my-2 font-sans" placeholder="Correo electronico" autocomplete="email-address">
-                </label>
-            </div>            
-            <label for="password" class="flex flex-col py-2">
-                Contraseña
-                <div class="flex flex-row-reverse">
-                    <input id="password" type="password" name="password" value="<%= data.password || '' %>" class="rounded-2xl py-2 px-4 my-2 w-full font-sans" autocomplete="off">
-                    <i id="iconChange" class="absolute my-4 mx-4 ri-eye-line"></i>
+        <form action="/singUpUsers" class="form-stack" method="post">
+            <h1 class="auth-card-title">Crear cuenta</h1>
+            <p class="form-hint text-center -mt-1 mb-1">Completá los datos para registrarte. Si ya tenés cuenta, iniciá sesión.</p>
+            <div class="form-grid-2">
+                <div class="sm:col-span-2">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input id="nombre" type="text" name="nombre" placeholder="Tu nombre" value="<%= data.nombre || '' %>" class="form-control" autocomplete="name" required>
                 </div>
-            </label>
-            <p class="py-2 text-sm text-gray-300 hover:underline hover:text-black">Estas registrado? <a class="hover:text-yellow-500" href="/admin">Iniciar sesión</a></p>
-            <button type="submit" class="bg-yellow-500 py-2 px-6 rounded-xl mt-2 font-bold text-violet hover:text-white">Sing up</button>
+                <div class="sm:col-span-2">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input id="email" type="email" name="email" value="<%= data.email || '' %>" class="form-control" placeholder="nombre@ejemplo.com" autocomplete="email" required>
+                </div>
+            </div>
+            <div>
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="relative">
+                    <input id="password" type="password" name="password" value="<%= data.password || '' %>" class="form-control pr-11" autocomplete="new-password" required>
+                    <button type="button" id="iconChange" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg text-violet hover:bg-violet/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow ri-eye-line" aria-label="Mostrar u ocultar contraseña" aria-pressed="false"></button>
+                </div>
+            </div>
+            <p class="auth-footer-link">¿Ya estás registrado? <a href="/admin">Iniciar sesión</a></p>
+            <button type="submit" class="btn-primary">Registrarse</button>
         </form>
-    </section>
+        </div>
+    </main>
     <%- include('../partials/footer.ejs') %>
     <script src="/javascript/effects.js"></script>
 </body>

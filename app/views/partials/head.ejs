@@ -6,6 +6,14 @@
     <title><%= title  %></title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="shortcut icon" href="../images/3dprinter.svg" type="image/x-icon">
+    <script>
+      window.LAIMPRESIONETA_CONFIG = <%- JSON.stringify({
+        whatsappPhone: publicContact.whatsappPhone,
+        email: publicContact.email,
+        instagramUrl: publicContact.instagramUrl,
+        whatsappDefaultText: 'Hola, quiero consultar por un trabajo en impresión 3D / grabado láser.'
+      }) %>;
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@tailwindcss/custom-forms@0.2.1/dist/custom-forms.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>

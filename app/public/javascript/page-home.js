@@ -16,29 +16,29 @@
         '<p class="text-center text-white w-full py-8">No hay servicios para mostrar.</p>';
       return;
     }
-    root.innerHTML = list
+      root.innerHTML = list
       .map(function (s) {
         var admin =
           isAdmin &&
-          '<div class="flex justify-evenly mx-auto my-4">' +
-            '<a class="text-3xl text-yellow hover:text-green-600 ri-edit-line" href="/editservice/' +
+          '<div class="flex justify-evenly gap-4 mx-auto mt-4 pt-4 border-t border-white/15">' +
+            '<a class="text-2xl text-yellow hover:text-white ri-edit-line" href="/editservice/' +
             s.id +
             '" aria-label="Editar servicio"></a>' +
-            '<button type="button" class="text-3xl text-yellow hover:text-red-600 ri-delete-bin-2-line bg-transparent border-0 cursor-pointer jwt-delete-service" data-id="' +
+            '<button type="button" class="text-2xl text-yellow hover:text-white ri-delete-bin-2-line bg-transparent border-0 cursor-pointer jwt-delete-service" data-id="' +
             s.id +
             '" aria-label="Eliminar servicio"></button>' +
             '</div>';
         return (
-          '<div class="basis-1/4 my-6 rounded-xl">' +
-          '<div class="flex-col bg-violet-500 py-12">' +
-          '<img class="mx-auto w-14 mb-6" src="' +
+          '<div class="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 my-4 px-2">' +
+          '<article class="bg-violet-500 rounded-2xl shadow-xl ring-1 ring-black/15 overflow-hidden h-full flex flex-col py-8 px-6">' +
+          '<img class="mx-auto w-16 h-16 object-contain mb-5" src="' +
           escapeHtml(s.iconService) +
-          '" alt="">' +
-          '<p class="w-3/4 mx-auto text-white">' +
+          '" alt="" role="presentation">' +
+          '<p class="mx-auto text-white text-center text-sm md:text-base leading-relaxed">' +
           escapeHtml(s.details) +
           '</p>' +
           (admin || '') +
-          '</div></div>'
+          '</article></div>'
         );
       })
       .join('');
@@ -82,22 +82,25 @@
     root.innerHTML = list
       .map(function (p) {
         return (
-          '<div class="basis-1/2 lg:basis-1/6 my-6 rounded-xl">' +
-          '<div class="flex-col bg-violet-500 md:mx-6 lg:mx-auto">' +
-          '<img class="rounded-t-xl w-full h-44 object-contain bg-white" src="' +
+          '<div class="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 my-4 px-2">' +
+          '<article class="flex flex-col overflow-hidden rounded-2xl bg-violet-500 shadow-xl ring-1 ring-black/15 transition-shadow duration-200 hover:shadow-2xl hover:ring-yellow/25 md:mx-0 lg:mx-auto h-full">' +
+          '<div class="aspect-[4/3] w-full bg-white flex items-center justify-center p-2">' +
+          '<img class="max-h-full w-full object-contain" src="' +
           escapeHtml(p.image) +
           '" alt="' +
           escapeHtml(p.name) +
           '">' +
-          '<div class="py-4 text-center h-64 lg:flex lg:flex-col lg:justify-around">' +
-          '<h2 class="text-2xl text-center p-2 text-white">' +
+          '</div>' +
+          '<div class="flex flex-col gap-3 px-4 pb-5 pt-4 text-center flex-1">' +
+          '<h3 class="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2 min-h-[2.75rem]">' +
           escapeHtml(p.name) +
-          '</h2>' +
-          '<h3 class="text-2xl text-center py-2 text-yellow">$ ' +
-          escapeHtml(String(p.price)) +
           '</h3>' +
-          '<button type="button" class="jwt-open-product mx-auto my-6 rounded-3xl bg-yellow px-8 py-1 text-2xl font-semibold text-violet hover:text-white hover:bg-violet focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500">Detalles</button>' +
-          '</div></div></div>'
+          '<p class="text-2xl sm:text-3xl font-black text-yellow tracking-tight">' +
+          '$ ' +
+          escapeHtml(String(p.price)) +
+          '</p>' +
+          '<button type="button" class="jwt-open-product mt-auto w-full sm:w-auto mx-auto rounded-xl bg-yellow px-6 py-3 text-base sm:text-lg font-bold text-violet hover:bg-[#390097] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow transition-colors duration-150">Ver detalles</button>' +
+          '</div></article></div>'
         );
       })
       .join('');
